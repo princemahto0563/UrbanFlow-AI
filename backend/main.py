@@ -4,7 +4,6 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from model import predict_demand
-import uvicorn
 
 # -----------------------------
 # App Initialization
@@ -20,7 +19,7 @@ app = FastAPI(
 # -----------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # dev ke liye OK
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -52,7 +51,6 @@ def home():
 @app.post("/predict")
 def predict(data: PredictionRequest):
     try:
-        # Input validation
         if data.hour < 0 or data.hour > 23:
             raise HTTPException(status_code=400, detail="Hour must be 0-23")
 
@@ -62,17 +60,14 @@ def predict(data: PredictionRequest):
         if data.day_type not in ["weekday", "weekend"]:
             raise HTTPException(status_code=400, detail="Invalid day type")
 
-        # 🔥 Model prediction
         prediction = predict_demand(
             data.hour,
             data.location,
             data.day_type
         )
 
-        # 🔥 Safe numeric conversion
         prediction = float(prediction)
 
-        # Response (frontend friendly)
         return {
             "prediction": round(prediction, 2),
             "category": get_category(prediction),
@@ -83,7 +78,7 @@ def predict(data: PredictionRequest):
         raise e
 
     except Exception as e:
-        print("❌ ERROR:", e)  # debug console me dikhega
+        print("❌ ERROR:", e)
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
@@ -104,10 +99,3 @@ def get_insight(value):
     elif value > 150:
         return "⚠️ Moderate demand. Stable ride opportunities."
     return "✅ Low demand. Consider switching zones."
-
-
-# -----------------------------
-# Run Server
-# -----------------------------
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
