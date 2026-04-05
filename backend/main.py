@@ -11,11 +11,11 @@ from model import predict_demand
 app = FastAPI(
     title="UrbanFlow AI API",
     description="AI-powered Ride Demand Prediction System",
-    version="1.0.0"
+    version="2.0.0"
 )
 
 # -----------------------------
-# CORS (Frontend connect ke liye 🔥)
+# CORS
 # -----------------------------
 app.add_middleware(
     CORSMiddleware,
@@ -46,11 +46,12 @@ def home():
 
 
 # -----------------------------
-# Prediction API
+# Prediction API 🔥
 # -----------------------------
 @app.post("/predict")
 def predict(data: PredictionRequest):
     try:
+        # ✅ Input Validation
         if data.hour < 0 or data.hour > 23:
             raise HTTPException(status_code=400, detail="Hour must be 0-23")
 
@@ -60,6 +61,7 @@ def predict(data: PredictionRequest):
         if data.day_type not in ["weekday", "weekend"]:
             raise HTTPException(status_code=400, detail="Invalid day type")
 
+        # 🔥 ML Prediction
         prediction = predict_demand(
             data.hour,
             data.location,
@@ -68,10 +70,16 @@ def predict(data: PredictionRequest):
 
         prediction = float(prediction)
 
+        # 🔥 Smart Economic Layer
+        pricing = get_dynamic_pricing(prediction)
+
+        # ✅ Final Response
         return {
             "prediction": round(prediction, 2),
             "category": get_category(prediction),
-            "insight": get_insight(prediction)
+            "insight": get_insight(prediction),
+            "surge_multiplier": pricing["surge"],
+            "driver_incentive": pricing["incentive"]
         }
 
     except HTTPException as e:
@@ -85,17 +93,44 @@ def predict(data: PredictionRequest):
 # -----------------------------
 # Helper Functions
 # -----------------------------
+
+# 🔥 Demand Category
 def get_category(value):
-    if value > 250:
+    if value > 400:
         return "High"
-    elif value > 150:
+    elif value > 200:
         return "Medium"
     return "Low"
 
 
+# 🔥 Insight Engine
 def get_insight(value):
-    if value > 250:
-        return "🔥 High demand! Drivers should move to this zone."
-    elif value > 150:
-        return "⚠️ Moderate demand. Stable ride opportunities."
-    return "✅ Low demand. Consider switching zones."
+    if value > 400:
+        return "🔥 Extreme demand! Immediate driver shift required."
+    elif value > 200:
+        return "⚠️ Moderate demand. Balanced driver allocation needed."
+    return "✅ Low demand. Drivers can relocate."
+
+
+# 🔥 Dynamic Pricing + Incentive Engine (X-FACTOR 💀)
+def get_dynamic_pricing(value):
+    if value > 500:
+        return {
+            "surge": 2.0,
+            "incentive": "🔥 High Bonus + Priority Zone"
+        }
+    elif value > 350:
+        return {
+            "surge": 1.6,
+            "incentive": "💰 Medium Bonus"
+        }
+    elif value > 200:
+        return {
+            "surge": 1.3,
+            "incentive": "⚡ Small Bonus"
+        }
+    else:
+        return {
+            "surge": 1.0,
+            "incentive": "No Bonus"
+        }

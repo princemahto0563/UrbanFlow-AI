@@ -19,7 +19,7 @@ export default function Dashboard() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // 🔥 REALISTIC FULL-DAY DATA (smooth curve)
+  // 🔥 REALISTIC FULL-DAY DATA
   const chartData = [
     { hour: "6 AM", A: 90, B: 70 },
     { hour: "7 AM", A: 200, B: 90 },
@@ -34,13 +34,13 @@ export default function Dashboard() {
     { hour: "10 PM", A: 150, B: 520 },
   ];
 
-  // 🔥 BACKEND CALL (AUTO PORT SAFE)
+  // 🔥 BACKEND CALL (NO CHANGE)
   const handlePredict = async () => {
     try {
       setLoading(true);
 
       const res = await axios.post(
-        "http://127.0.0.1:8001/predict", // 🔥 always use 8001 now
+        "https://urbanflow-ai-rwfw.onrender.com/predict",
         {
           hour: Number(hour),
           location,
@@ -179,6 +179,17 @@ export default function Dashboard() {
               <p className="text-sm text-gray-400 text-center mt-2 max-w-xs">
                 {result.insight}
               </p>
+
+              {/* 🔥 NEW ADDED (SURGE + INCENTIVE) */}
+              <div className="mt-4 text-center space-y-1">
+                <p className="text-cyan-400 font-semibold">
+                  💰 Surge: {result.surge_multiplier}x
+                </p>
+
+                <p className="text-green-400 font-medium">
+                  🚗 Incentive: {result.driver_incentive}
+                </p>
+              </div>
             </>
           ) : (
             <p className="text-gray-400">No prediction yet</p>
