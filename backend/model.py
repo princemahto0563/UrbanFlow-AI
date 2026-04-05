@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 import joblib
 import os
+import numpy as np
 
 # -----------------------------
 # Load Dataset (safe path)
@@ -35,13 +36,10 @@ data['demand'] = data['demand'].astype(float)
 data = data.dropna()
 
 # -----------------------------
-# Encoding
+# Encoding (FIXED)
 # -----------------------------
-data['location'] = data['location'].map({'A': 0, 'B': 1})
-data['day_type'] = data['day_type'].map({'weekday': 0, 'weekend': 1})
-
-# Fill any encoding issues
-data = data.fillna(0)
+data['location'] = data['location'].map({'A': 0, 'B': 1}).fillna(0)
+data['day_type'] = data['day_type'].map({'weekday': 0, 'weekend': 1}).fillna(0)
 
 # -----------------------------
 # Feature Engineering
@@ -53,6 +51,12 @@ def create_features(df):
     return df
 
 data = create_features(data)
+
+# -----------------------------
+# 🚨 Empty Data Check (FIXED)
+# -----------------------------
+if data.empty:
+    raise ValueError("❌ Dataset is empty or not loaded properly")
 
 # -----------------------------
 # Features & Target
@@ -102,7 +106,7 @@ MODEL_PATH = os.path.join(BASE_DIR, "model.pkl")
 joblib.dump(model, MODEL_PATH)
 
 # -----------------------------
-# Prediction Function
+# Prediction Function (FIXED)
 # -----------------------------
 def predict_demand(hour, location, day_type):
     try:
@@ -117,7 +121,8 @@ def predict_demand(hour, location, day_type):
 
         input_data = [[hour, loc, day, is_peak, is_morning, is_night]]
 
-        prediction = model.predict(input_data)[0]
+        # ✅ FIX: proper dataframe with column names
+        prediction = model.predict(pd.DataFrame(input_data, columns=features))[0]
 
         return round(float(prediction), 2)
 
