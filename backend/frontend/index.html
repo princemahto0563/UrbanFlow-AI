@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>UrbanFlow AI 🚗 | Smart Mobility System</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="logo.png" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Theme Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#00f5ff",
+            secondary: "#22c55e",
+            dark: "#020617",
+            card: "#0f172a"
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom, #020617, #0f172a);
+      color: white;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #00f5ff;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ✅ ONLY ROOT (React handle karega sab) -->
+  <div id="root"></div>
+
+  <!-- React Entry -->
+  <script type="module" src="/src/main.jsx"></script>
+
+</body>
+</html>

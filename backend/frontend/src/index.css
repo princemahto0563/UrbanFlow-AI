@@ -1,0 +1,205 @@
+/* 🔥 RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 🌌 BODY (Premium Gradient + Glow BG) */
+body {
+  font-family: "Poppins", sans-serif;
+  background: radial-gradient(circle at top, #020617, #000);
+  color: #e2e8f0;
+  overflow-x: hidden;
+}
+
+/* 🔥 ANIMATED BACKGROUND GLOW */
+body::before {
+  content: "";
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0,245,255,0.15), transparent);
+  top: -100px;
+  left: -100px;
+  z-index: -1;
+  filter: blur(120px);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(34,197,94,0.15), transparent);
+  bottom: -100px;
+  right: -100px;
+  z-index: -1;
+  filter: blur(120px);
+}
+
+/* 🔥 NAVBAR */
+header {
+  background: rgba(2, 6, 23, 0.7);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #00f5ff, #22c55e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+header a {
+  color: #94a3b8;
+  text-decoration: none;
+  margin-left: 20px;
+  transition: all 0.3s ease;
+}
+
+header a:hover {
+  color: #00f5ff;
+  text-shadow: 0 0 10px #00f5ff;
+}
+
+/* 🚀 HERO */
+.hero {
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #00f5ff, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+  margin-top: 15px;
+  font-size: 1.2rem;
+  color: #94a3b8;
+}
+
+/* 🔥 BUTTON (GLOW EFFECT) */
+button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #00f5ff, #6366f1);
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 20px #00f5ff, 0 0 40px rgba(0,245,255,0.4);
+}
+
+/* 💎 GLASS CARD */
+.card {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: 18px;
+  padding: 20px;
+  margin: 20px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 0 25px rgba(0,245,255,0.3);
+}
+
+/* 🎯 INPUT */
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #1e293b;
+  background: rgba(2,6,23,0.8);
+  color: white;
+  transition: all 0.3s;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #00f5ff;
+  box-shadow: 0 0 10px #00f5ff;
+}
+
+/* 📊 GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* 🔻 FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #64748b;
+}
+
+/* 🔥 SCROLLBAR */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#00f5ff, #22c55e);
+  border-radius: 10px;
+}
+
+/* ✨ FADE ANIMATION */
+.fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 🚀 FLOAT ANIMATION */
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+/* 🔥 PULSE GLOW */
+.pulse {
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0px #00f5ff; }
+  50% { box-shadow: 0 0 20px #00f5ff; }
+  100% { box-shadow: 0 0 0px #00f5ff; }
+}
