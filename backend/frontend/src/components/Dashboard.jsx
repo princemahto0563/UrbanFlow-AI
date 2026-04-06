@@ -79,6 +79,14 @@ export default function Dashboard() {
     return "🕒 Normal Traffic";
   };
 
+  // ✅ NEW ADD (TIME LABEL FUNCTION)
+  const getTimeLabel = (hour) => {
+    if (hour >= 5 && hour < 12) return "🌅 Morning";
+    if (hour >= 12 && hour < 17) return "☀️ Afternoon";
+    if (hour >= 17 && hour < 21) return "🌆 Evening Peak";
+    return "🌙 Night";
+  };
+
   const stats = [
     { title: "Avg Demand", value: "320" },
     { title: "Peak Hour", value: "7 PM" },
@@ -116,6 +124,12 @@ export default function Dashboard() {
           </h2>
 
           <label>Hour: {hour}</label>
+
+          {/* ✅ NEW ADD (TIME LABEL UI) */}
+          <p className="text-sm text-cyan-400 mb-2">
+            {getTimeLabel(hour)} ({hour}:00)
+          </p>
+
           <input type="range" min="0" max="23" value={hour}
             onChange={(e) => setHour(e.target.value)}
             className="w-full mb-4 accent-cyan-400"
@@ -135,7 +149,6 @@ export default function Dashboard() {
             <option value="weekend">Weekend</option>
           </select>
 
-          {/* WEATHER */}
           <select className="w-full mb-3 p-2 bg-dark rounded border border-gray-700"
             value={weather}
             onChange={(e) => setWeather(e.target.value)}>
@@ -144,7 +157,6 @@ export default function Dashboard() {
             <option value="hot">🔥 Hot</option>
           </select>
 
-          {/* EVENT */}
           <select className="w-full mb-4 p-2 bg-dark rounded border border-gray-700"
             value={event}
             onChange={(e) => setEvent(e.target.value)}>
