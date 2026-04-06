@@ -161,8 +161,11 @@ export default function Dashboard() {
             value={event}
             onChange={(e) => setEvent(e.target.value)}>
             <option value="none">No Event</option>
-            <option value="concert">🎤 Concert</option>
-            <option value="festival">🎉 Festival</option>
+            <option value="concert">🎤 Live Concert</option>
+            <option value="match">🏏 Cricket Match</option>
+            <option value="college">🎓 College Fest</option>
+            <option value="mall">🛍️ Mall Mega Sale</option>
+            <option value="transport">🚉 Travel Rush</option>
           </select>
 
           <motion.button
