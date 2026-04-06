@@ -32,6 +32,8 @@ class PredictionRequest(BaseModel):
     hour: int
     location: str
     day_type: str
+    weather: str = "clear"   # ✅ NEW (default safe)
+    event: str = "none"      # ✅ NEW (default safe)
 
 
 # -----------------------------
@@ -61,7 +63,15 @@ def predict(data: PredictionRequest):
         if data.day_type not in ["weekday", "weekend"]:
             raise HTTPException(status_code=400, detail="Invalid day type")
 
-        # 🔥 ML Prediction
+        # ✅ Weather Validation
+        if data.weather not in ["clear", "rain", "hot"]:
+            raise HTTPException(status_code=400, detail="Invalid weather")
+
+        # ✅ Event Validation
+        if data.event not in ["none", "concert", "festival"]:
+            raise HTTPException(status_code=400, detail="Invalid event")
+
+        # 🔥 ML Prediction (existing)
         prediction = predict_demand(
             data.hour,
             data.location,
@@ -69,6 +79,18 @@ def predict(data: PredictionRequest):
         )
 
         prediction = float(prediction)
+
+        # 🔥 X-FACTOR: Weather Impact
+        if data.weather == "rain":
+            prediction += 80
+        elif data.weather == "hot":
+            prediction += 40
+
+        # 🔥 X-FACTOR: Event Impact
+        if data.event == "concert":
+            prediction += 100
+        elif data.event == "festival":
+            prediction += 70
 
         # 🔥 Smart Economic Layer
         pricing = get_dynamic_pricing(prediction)
@@ -79,7 +101,9 @@ def predict(data: PredictionRequest):
             "category": get_category(prediction),
             "insight": get_insight(prediction),
             "surge_multiplier": pricing["surge"],
-            "driver_incentive": pricing["incentive"]
+            "driver_incentive": pricing["incentive"],
+            "weather": data.weather,     # optional (debug/info)
+            "event": data.event          # optional (debug/info)
         }
 
     except HTTPException as e:

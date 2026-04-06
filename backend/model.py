@@ -21,22 +21,18 @@ except Exception as e:
     data = pd.DataFrame(columns=['hour','location','day_type','demand'])
 
 # -----------------------------
-# 🔥 DATA CLEANING (VERY IMPORTANT)
+# DATA CLEANING
 # -----------------------------
-
-# Remove invalid rows
 data = data[pd.to_numeric(data['hour'], errors='coerce').notnull()]
 data = data[pd.to_numeric(data['demand'], errors='coerce').notnull()]
 
-# Convert types
 data['hour'] = data['hour'].astype(int)
 data['demand'] = data['demand'].astype(float)
 
-# Drop missing
 data = data.dropna()
 
 # -----------------------------
-# Encoding (FIXED)
+# Encoding
 # -----------------------------
 data['location'] = data['location'].map({'A': 0, 'B': 1}).fillna(0)
 data['day_type'] = data['day_type'].map({'weekday': 0, 'weekend': 1}).fillna(0)
@@ -53,7 +49,7 @@ def create_features(df):
 data = create_features(data)
 
 # -----------------------------
-# 🚨 Empty Data Check (FIXED)
+# Empty Check
 # -----------------------------
 if data.empty:
     raise ValueError("❌ Dataset is empty or not loaded properly")
@@ -77,7 +73,7 @@ else:
     X_train, X_test, y_train, y_test = X, X, y, y
 
 # -----------------------------
-# Model Training (Stable)
+# Model Training
 # -----------------------------
 model = RandomForestRegressor(
     n_estimators=250,
@@ -106,9 +102,9 @@ MODEL_PATH = os.path.join(BASE_DIR, "model.pkl")
 joblib.dump(model, MODEL_PATH)
 
 # -----------------------------
-# Prediction Function (FIXED)
+# 🔥 Prediction Function (UPDATED)
 # -----------------------------
-def predict_demand(hour, location, day_type):
+def predict_demand(hour, location, day_type, weather="clear", event="none"):
     try:
         hour = int(hour)
 
@@ -121,10 +117,29 @@ def predict_demand(hour, location, day_type):
 
         input_data = [[hour, loc, day, is_peak, is_morning, is_night]]
 
-        # ✅ FIX: proper dataframe with column names
-        prediction = model.predict(pd.DataFrame(input_data, columns=features))[0]
+        prediction = model.predict(
+            pd.DataFrame(input_data, columns=features)
+        )[0]
 
-        return round(float(prediction), 2)
+        prediction = float(prediction)
+
+        # -----------------------------
+        # 🔥 WEATHER IMPACT (controlled boost)
+        # -----------------------------
+        if weather == "rain":
+            prediction *= 1.25   # 25% increase
+        elif weather == "hot":
+            prediction *= 1.15   # 15% increase
+
+        # -----------------------------
+        # 🔥 EVENT IMPACT
+        # -----------------------------
+        if event == "concert":
+            prediction += 120
+        elif event == "festival":
+            prediction += 80
+
+        return round(prediction, 2)
 
     except Exception as e:
         print("❌ Prediction Error:", e)
@@ -144,7 +159,6 @@ def get_demand_insight(prediction):
             return "⚠️ Moderate Demand. Balanced driver allocation needed"
         else:
             return "✅ Low Demand. Drivers can relocate"
-
     except:
         return "⚠️ Unable to generate insight"
 
